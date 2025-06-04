@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️LOVE 12A1❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h3>Hãy Để Lại Một Lời Chúc Hoặc Một Lời Nhắn đến Một Ai Đó</h3>
+        
+        <div class="wish-form">
+            <input type="text" id="name" placeholder="Tên của bạn..." required>
+            <textarea id="message" placeholder="Lời chúc của bạn..." required></textarea>
+            <button id="submit-btn">Gửi Lời Chúc</button>
+        </div>
+        
+        <div class="wishes-container">
+            <h2>Những Lời Chúc Gần Đây</h2>
+            <div id="wishes-list"></div>
+        </div>
+    </div>
+
+    <audio id="background-music" loop autoplay>
+        <source src="assets/background-music.mp3" type="audio/mpeg">
+    </audio>
+    <button id="music-toggle">🔊 Bật/Tắt nhạc</button>
+    <button id="change-bg">🖼️ Đổi ảnh nền</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
