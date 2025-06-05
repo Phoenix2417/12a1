@@ -7,6 +7,80 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Thêm style cho modal giới thiệu và liên hệ */
+    .info-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .info-modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .modal-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--accent-color);
+    }
+    
+    /* Nút về đầu trang khi cuộn */
+    .back-to-top {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 99;
+    }
+    
+    .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .back-to-top:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-3px);
+    }
         :root {
             --primary-color: #ff6b8b;
             --secondary-color: #ffb8c6;
@@ -591,17 +665,41 @@
             </div>
         </div>
             
-            <div class="footer-links">
-                <a href="#" class="footer-link" onclick="scrollToTop()">
-                    <i class="fas fa-arrow-up"></i> Về đầu trang
-                </a>
-                <a href="#" class="footer-link" onclick="showAbout()">
-                    <i class="fas fa-info-circle"></i> Giới thiệu
-                </a>
-                <a href="#" class="footer-link" onclick="showContact()">
-                    <i class="fas fa-envelope"></i> Liên hệ
-                </a>
-            </div>
+            <div class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<!-- Modal Giới thiệu -->
+<div class="info-modal" id="aboutModal">
+    <div class="modal-container">
+        <button class="close-modal" onclick="hideAbout()">&times;</button>
+        <h3>Giới thiệu</h3>
+        <p>Trang web được tạo ra để lưu giữ lại những tình cảm, những lời chúc yêu thương của tập thể lớp 12A1.</p>
+        <p>Mỗi lời chúc là một câu chuyện, mỗi chia sẻ là một kỷ niệm đáng nhớ mà chúng ta cùng nhau trải qua trong những năm tháng học trò.</p>
+        <div class="modal-buttons">
+            <button onclick="hideAbout()">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Liên hệ -->
+<div class="info-modal" id="contactModal">
+    <div class="modal-container">
+        <button class="close-modal" onclick="hideContact()">&times;</button>
+        <h3>Liên hệ</h3>
+        <p>Nếu bạn có bất kỳ câu hỏi hoặc góp ý nào, vui lòng liên hệ với chúng tôi:</p>
+        <ul style="list-style-type: none; margin: 1rem 0; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-envelope"></i> Email: nvhuyhoang24107@gmail.com</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-link"></i> Fanpage: fb.com/Phoenix.2417</li>
+        </ul>
+        <div class="modal-buttons">
+            <button onclick="hideContact()">Đóng</button>
+            <button onclick="window.open('mailto:nvhuyhoang24107@gmail.com')">
+                <i class="fas fa-paper-plane"></i> Gửi Email
+            </button>
+        </div>
+    </div>
+</div>
             
             <div class="footer-info">
                 <div class="copyright">
@@ -633,6 +731,68 @@
     </div>
 
     <script>
+        // ========== XỬ LÝ MODAL ==========
+    window.showAbout = function() {
+        document.getElementById('aboutModal').classList.add('active');
+    };
+    
+    window.hideAbout = function() {
+        document.getElementById('aboutModal').classList.remove('active');
+    };
+    
+    window.showContact = function() {
+        document.getElementById('contactModal').classList.add('active');
+    };
+    
+    window.hideContact = function() {
+        document.getElementById('contactModal').classList.remove('active');
+    };
+    
+    // ========== XỬ LÝ NÚT VỀ ĐẦU TRANG ==========
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    // Hiển thị/nấu nút khi cuộn
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    
+    // Xử lý click nút về đầu trang
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Cải thiện hàm scrollToTop
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+    
+    // Đóng modal khi click ra ngoài
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('info-modal')) {
+            document.querySelectorAll('.info-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+    });
+    
+    // Đóng modal bằng phím ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.info-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+    });
         // ========== CẤU HÌNH ==========
         const CONFIG = {
             MAX_WISHES: 50,
