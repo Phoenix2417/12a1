@@ -7,80 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Thêm style cho modal giới thiệu và liên hệ */
-    .info-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-    }
-    
-    .info-modal.active {
-        opacity: 1;
-        visibility: visible;
-    }
-    
-    .modal-container {
-        background-color: white;
-        padding: 2rem;
-        border-radius: 15px;
-        max-width: 500px;
-        width: 90%;
-        position: relative;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-    
-    .close-modal {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: var(--accent-color);
-    }
-    
-    /* Nút về đầu trang khi cuộn */
-    .back-to-top {
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: var(--primary-color);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 99;
-    }
-    
-    .back-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-    }
-    
-    .back-to-top:hover {
-        background-color: var(--accent-color);
-        transform: translateY(-3px);
-    }
         :root {
             --primary-color: #ff6b8b;
             --secondary-color: #ffb8c6;
@@ -495,6 +421,82 @@
             opacity: 0.8;
         }
         
+        /* MODAL STYLES */
+        .info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .info-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--accent-color);
+        }
+        
+        /* BACK TO TOP BUTTON */
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        /* ANIMATIONS */
         @keyframes float {
             0% {
                 transform: translateY(0) rotate(0deg);
@@ -605,6 +607,10 @@
             .footer-title {
                 font-size: 1.5rem;
             }
+            
+            .modal-container {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -663,43 +669,18 @@
                     <span class="stats-label">Lời chúc</span>
                 </div>
             </div>
-        </div>
             
-            <div class="back-to-top" id="backToTop">
-    <i class="fas fa-arrow-up"></i>
-</div>
-
-<!-- Modal Giới thiệu -->
-<div class="info-modal" id="aboutModal">
-    <div class="modal-container">
-        <button class="close-modal" onclick="hideAbout()">&times;</button>
-        <h3>Giới thiệu</h3>
-        <p>Trang web được tạo ra để lưu giữ lại những tình cảm, những lời chúc yêu thương của tập thể lớp 12A1.</p>
-        <p>Mỗi lời chúc là một câu chuyện, mỗi chia sẻ là một kỷ niệm đáng nhớ mà chúng ta cùng nhau trải qua trong những năm tháng học trò.</p>
-        <div class="modal-buttons">
-            <button onclick="hideAbout()">Đóng</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Liên hệ -->
-<div class="info-modal" id="contactModal">
-    <div class="modal-container">
-        <button class="close-modal" onclick="hideContact()">&times;</button>
-        <h3>Liên hệ</h3>
-        <p>Nếu bạn có bất kỳ câu hỏi hoặc góp ý nào, vui lòng liên hệ với chúng tôi:</p>
-        <ul style="list-style-type: none; margin: 1rem 0; padding: 0;">
-            <li style="margin-bottom: 0.5rem;"><i class="fas fa-envelope"></i> Email: nvhuyhoang24107@gmail.com</li>
-            <li style="margin-bottom: 0.5rem;"><i class="fas fa-link"></i> Fanpage: fb.com/Phoenix.2417</li>
-        </ul>
-        <div class="modal-buttons">
-            <button onclick="hideContact()">Đóng</button>
-            <button onclick="window.open('mailto:nvhuyhoang24107@gmail.com')">
-                <i class="fas fa-paper-plane"></i> Gửi Email
-            </button>
-        </div>
-    </div>
-</div>
+            <div class="footer-links">
+                <a href="#" class="footer-link" onclick="scrollToTop()">
+                    <i class="fas fa-arrow-up"></i> Về đầu trang
+                </a>
+                <a href="#" class="footer-link" onclick="showAbout()">
+                    <i class="fas fa-info-circle"></i> Giới thiệu
+                </a>
+                <a href="#" class="footer-link" onclick="showContact()">
+                    <i class="fas fa-envelope"></i> Liên hệ
+                </a>
+            </div>
             
             <div class="footer-info">
                 <div class="copyright">
@@ -709,12 +690,19 @@
         </div>
     </footer>
 
+    <!-- BACK TO TOP BUTTON -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- CONTROL BUTTONS -->
     <div class="control-buttons">
         <button id="music-toggle" class="control-btn" title="Bật/Tắt nhạc"><i class="fas fa-music"></i></button>
         <button id="change-bg" class="control-btn" title="Đổi ảnh nền"><i class="fas fa-image"></i></button>
         <button id="refresh-btn" class="control-btn" title="Làm mới"><i class="fas fa-sync-alt"></i></button>
     </div>
 
+    <!-- MODALS -->
     <audio id="background-music" loop>
         <source src="assets/background-music.mp3" type="audio/mpeg">
     </audio>
@@ -730,12 +718,44 @@
         </div>
     </div>
 
+    <!-- ABOUT MODAL -->
+    <div class="info-modal" id="aboutModal">
+        <div class="modal-container">
+            <button class="close-modal" onclick="hideAbout()">&times;</button>
+            <h3>Giới thiệu</h3>
+            <p>Trang web được tạo ra để lưu giữ lại những tình cảm, những lời chúc yêu thương của tập thể lớp 12A1.</p>
+            <p>Mỗi lời chúc là một câu chuyện, mỗi chia sẻ là một kỷ niệm đáng nhớ mà chúng ta cùng nhau trải qua trong những năm tháng học trò.</p>
+            <div class="modal-buttons">
+                <button onclick="hideAbout()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT MODAL -->
+    <div class="info-modal" id="contactModal">
+        <div class="modal-container">
+            <button class="close-modal" onclick="hideContact()">&times;</button>
+            <h3>Liên hệ</h3>
+            <p>Nếu bạn có bất kỳ câu hỏi hoặc góp ý nào, vui lòng liên hệ với chúng tôi:</p>
+            <ul style="list-style-type: none; margin: 1rem 0; padding: 0;">
+                <li style="margin-bottom: 0.5rem;"><i class="fas fa-envelope"></i> Email: nvhuyhoang24107@gmail.com</li>
+                <li style="margin-bottom: 0.5rem;"><i class="fas fa-link"></i> Fanpage: fb.com/Phoenix.2417</li>
+            </ul>
+            <div class="modal-buttons">
+                <button onclick="hideContact()">Đóng</button>
+                <button onclick="window.open('mailto:nvhuyhoang24107@gmail.com')">
+                    <i class="fas fa-paper-plane"></i> Gửi Email
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ========== CẤU HÌNH ==========
         const CONFIG = {
             MAX_WISHES: 50,
             REFRESH_INTERVAL: 30000, // 30 giây
-            BACKGROUND_MUSIC_VOLUME: 0.3 ,
+            BACKGROUND_MUSIC_VOLUME: 0.3,
             CACHE_EXPIRY: 5 * 60 * 1000 // 5 phút cache
         };
         
@@ -883,6 +903,59 @@
             const shareModalBtn = document.getElementById('share-modal');
             const wishesListElement = document.getElementById('wishes-list');
             const totalWishesElement = document.getElementById('total-wishes');
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            // ========== XỬ LÝ MODAL ==========
+            window.showAbout = function() {
+                document.getElementById('aboutModal').classList.add('active');
+            };
+            
+            window.hideAbout = function() {
+                document.getElementById('aboutModal').classList.remove('active');
+            };
+            
+            window.showContact = function() {
+                document.getElementById('contactModal').classList.add('active');
+            };
+            
+            window.hideContact = function() {
+                document.getElementById('contactModal').classList.remove('active');
+            };
+            
+            // Đóng modal khi click ra ngoài
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('info-modal')) {
+                    document.querySelectorAll('.info-modal').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+            
+            // ========== XỬ LÝ NÚT VỀ ĐẦU TRANG ==========
+            // Hiển thị/nấu nút khi cuộn
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            // Xử lý click nút về đầu trang
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Cải thiện hàm scrollToTop
+            window.scrollToTop = function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            };
             
             // ========== XỬ LÝ SỰ KIỆN ==========
             
@@ -978,7 +1051,7 @@
                 if (navigator.share) {
                     navigator.share({
                         title: 'Lời chúc từ LOVE 12A1',
-                        text: 'Tôi vừa gửi lời chúc trên LOVE 12A1. Hãy cùng xem nhé!',
+                        text: 'Tôi vừa gửi một lời chúc ngọt ngào trên trang LOVE 12A1!',
                         url: window.location.href
                     }).catch(err => {
                         console.log('Lỗi khi chia sẻ:', err);
@@ -986,54 +1059,72 @@
                         alert('Đã sao chép link vào clipboard!');
                     });
                 } else {
+                    // Fallback cho trình duyệt không hỗ trợ Web Share API
                     copyToClipboard(window.location.href);
                     alert('Đã sao chép link vào clipboard!');
                 }
+                confirmationModal.classList.remove('active');
             });
-            
-            // ========== HÀM TIỆN ÍCH ==========
+
+            // ========== CÁC HÀM TIỆN ÍCH ==========
             
             // Tải và hiển thị lời chúc
             async function loadAndDisplayWishes() {
                 try {
                     const wishes = await wishesManager.loadWishes();
                     displayWishes(wishes);
-                    updateStats(wishes.length);
+                    
+                    // Cập nhật số lượng lời chúc
+                    totalWishesElement.textContent = wishes.length;
                 } catch (error) {
                     console.error('Lỗi khi tải lời chúc:', error);
-                    wishesListElement.innerHTML = '<div class="error-message">Không thể tải lời chúc. Vui lòng thử lại sau!</div>';
+                    wishesListElement.innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Không thể tải lời chúc. Vui lòng thử lại sau!</p>
+                        </div>
+                    `;
                 }
             }
             
-            // Hiển thị lời chúc
+            // Hiển thị lời chúc lên giao diện
             function displayWishes(wishes) {
                 if (!wishes || wishes.length === 0) {
-                    wishesListElement.innerHTML = '<div class="empty-message">Chưa có lời chúc nào. Hãy là người đầu tiên!</div>';
+                    wishesListElement.innerHTML = `
+                        <div class="empty-message">
+                            <i class="far fa-comment-dots"></i>
+                            <p>Chưa có lời chúc nào. Hãy là người đầu tiên nhé!</p>
+                        </div>
+                    `;
                     return;
                 }
                 
-                let html = '';
+                const wishTypeNames = {
+                    'general': 'Lời chúc chung',
+                    'love': 'Lời yêu thương',
+                    'friendship': 'Tình bạn',
+                    'encouragement': 'Động viên',
+                    'memory': 'Kỷ niệm'
+                };
                 
-                wishes.forEach(wish => {
-                    const typeText = getTypeText(wish.type);
-                    const date = new Date(wish.timestamp).toLocaleString();
-                    
-                    html += `
-                        <div class="wish-card">
-                            <span class="wish-type">${typeText}</span>
-                            <h4>${escapeHtml(wish.name)}</h4>
-                            <p>${escapeHtml(wish.message).replace(/\n/g, '<br>')}</p>
-                            <small>${date}</small>
-                        </div>
-                    `;
-                });
+                const wishTypeColors = {
+                    'general': '#ff6b8b',
+                    'love': '#ff4757',
+                    'friendship': '#2ed573',
+                    'encouragement': '#1e90ff',
+                    'memory': '#ffa502'
+                };
                 
-                wishesListElement.innerHTML = html;
-            }
-            
-            // Cập nhật thống kê
-            function updateStats(count) {
-                totalWishesElement.textContent = count;
+                wishesListElement.innerHTML = wishes.map(wish => `
+                    <div class="wish-card">
+                        <span class="wish-type" style="background-color: ${wishTypeColors[wish.type] || '#ff6b8b'}">
+                            ${wishTypeNames[wish.type] || 'Lời chúc'}
+                        </span>
+                        <h4>${escapeHtml(wish.name)}</h4>
+                        <p>${formatMessage(wish.message)}</p>
+                        <small>${formatDate(wish.timestamp)}</small>
+                    </div>
+                `).join('');
             }
             
             // Tạo hiệu ứng trái tim bay
@@ -1044,42 +1135,23 @@
                         heart.className = 'heart-float';
                         heart.innerHTML = '❤️';
                         
-                        // Random position and animation
-                        heart.style.left = `${Math.random() * 100}%`;
-                        heart.style.animationDuration = `${4 + Math.random() * 6}s`;
-                        heart.style.fontSize = `${1 + Math.random() * 2}rem`;
+                        // Random vị trí và kích thước
+                        const size = Math.random() * 2 + 1;
+                        const left = Math.random() * 100;
+                        const animationDuration = Math.random() * 4 + 3;
+                        
+                        heart.style.left = `${left}%`;
+                        heart.style.fontSize = `${size}rem`;
+                        heart.style.animationDuration = `${animationDuration}s`;
                         
                         heartsContainer.appendChild(heart);
                         
-                        // Remove after animation
+                        // Xóa sau khi animation kết thúc
                         setTimeout(() => {
                             heart.remove();
-                        }, 10000);
+                        }, animationDuration * 1000);
                     }, i * 300);
                 }
-            }
-            
-            // Lấy tên loại lời chúc
-            function getTypeText(type) {
-                const types = {
-                    'general': 'Lời chúc chung',
-                    'love': 'Tình yêu',
-                    'friendship': 'Tình bạn',
-                    'encouragement': 'Động viên',
-                    'memory': 'Kỷ niệm'
-                };
-                return types[type] || type;
-            }
-            
-            // Escape HTML để phòng XSS
-            function escapeHtml(unsafe) {
-                if (!unsafe) return '';
-                return unsafe
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
             }
             
             // Sao chép vào clipboard
@@ -1092,314 +1164,55 @@
                 document.body.removeChild(textarea);
             }
             
-            // Cuộn lên đầu trang
-            window.scrollToTop = function() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
-            
-            // Hiển thị thông tin giới thiệu
-            window.showAbout = function() {
-                alert('Trang web được tạo ra để lưu giữ lại những tình cảm, những lời chúc yêu thương của tập thể lớp 12A1');
-            };
-            
-            // Hiển thị thông tin liên hệ
-            window.showContact = function() {
-                alert('Liên hệ admin qua email: nvhuyhoang24107@gmail.com\nHoặc qua fanpage: fb.com/Phoenix.2417');
-            };
-            
-            // Tự động tạo một vài trái tim khi trang load
-            setTimeout(() => createHearts(3), 1000);
-            
-            // Tạo trái tim ngẫu nhiên mỗi 15 giây
-            setInterval(() => {
-                if (Math.random() < 0.3) { // 30% chance
-                    createHearts(1);
-                }
-            }, 15000);
-            
-            // Xử lý form submission với Enter
-            document.getElementById('message').addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === 'Enter') {
-                    submitBtn.click();
-                }
-            });
-            
-            // Tự động resize textarea theo nội dung
-            document.getElementById('message').addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
-            
-            // Lazy loading cho lời chúc (intersection observer)
-            const observerOptions = {
-                root: null,
-                rootMargin: '10px',
-                threshold: 0.1
-            };
-            
-            const wishObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-            
-            // Animate new wishes when they appear
-            function animateNewWishes() {
-                const wishCards = document.querySelectorAll('.wish-card');
-                wishCards.forEach((card, index) => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, index * 100);
-                    
-                    wishObserver.observe(card);
-                });
-            }
-            
-            // Override displayWishes to include animation
-            const originalDisplayWishes = displayWishes;
-            displayWishes = function(wishes) {
-                originalDisplayWishes(wishes);
-                setTimeout(animateNewWishes, 100);
-            };
-            
-            // Thêm easter egg - double click vào tiêu đề
-            document.querySelector('h1').addEventListener('dblclick', function() {
-                createHearts(20);
-                this.style.animation = 'pulse 0.5s ease-in-out 3';
-                setTimeout(() => {
-                    this.style.animation = 'pulse 2s infinite';
-                }, 1500);
-            });
-            
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Ctrl/Cmd + R: Refresh wishes
-                if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-                    e.preventDefault();
-                    refreshBtn.click();
-                }
+            // Định dạng ngày tháng
+            function formatDate(timestamp) {
+                if (!timestamp) return '';
                 
-                // Escape: Close modal
-                if (e.key === 'Escape') {
-                    confirmationModal.classList.remove('active');
-                }
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - date) / 1000);
                 
-                // Space: Toggle music (when not typing)
-                if (e.key === ' ' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-                    e.preventDefault();
-                    musicToggle.click();
-                }
-            });
-            
-            // Progressive Web App support
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js')
-                        .then(function(registration) {
-                            console.log('ServiceWorker registration successful');
-                        })
-                        .catch(function(err) {
-                            console.log('ServiceWorker registration failed: ', err);
-                        });
-                });
-            }
-            
-            // Handle online/offline status
-            window.addEventListener('online', function() {
-                console.log('Đã kết nối internet');
-                loadAndDisplayWishes();
-            });
-            
-            window.addEventListener('offline', function() {
-                console.log('Mất kết nối internet');
-            });
-            
-            // Auto-save draft in localStorage (if available)
-            const nameInput = document.getElementById('name');
-            const messageInput = document.getElementById('message');
-            
-            function saveDraft() {
-                if (typeof Storage !== 'undefined') {
-                    const draft = {
-                        name: nameInput.value,
-                        message: messageInput.value,
-                        timestamp: Date.now()
-                    };
-                    localStorage.setItem('love12a1_draft', JSON.stringify(draft));
+                if (diffInSeconds < 60) {
+                    return 'Vừa xong';
+                } else if (diffInSeconds < 3600) {
+                    const mins = Math.floor(diffInSeconds / 60);
+                    return `${mins} phút trước`;
+                } else if (diffInSeconds < 86400) {
+                    const hours = Math.floor(diffInSeconds / 3600);
+                    return `${hours} giờ trước`;
+                } else {
+                    const days = Math.floor(diffInSeconds / 86400);
+                    return `${days} ngày trước`;
                 }
             }
             
-            function loadDraft() {
-                if (typeof Storage !== 'undefined') {
-                    const draftStr = localStorage.getItem('love12a1_draft');
-                    if (draftStr) {
-                        try {
-                            const draft = JSON.parse(draftStr);
-                            // Only load draft if it's less than 1 hour old
-                            if (Date.now() - draft.timestamp < 3600000) {
-                                nameInput.value = draft.name || '';
-                                messageInput.value = draft.message || '';
-                            } else {
-                                localStorage.removeItem('love12a1_draft');
-                            }
-                        } catch (e) {
-                            localStorage.removeItem('love12a1_draft');
-                        }
-                    }
-                }
+            // Định dạng tin nhắn (giữ nguyên xuống dòng)
+            function formatMessage(message) {
+                if (!message) return '';
+                return escapeHtml(message).replace(/\n/g, '<br>');
             }
             
-            function clearDraft() {
-                if (typeof Storage !== 'undefined') {
-                    localStorage.removeItem('love12a1_draft');
-                }
+            // Xử lý HTML để tránh XSS
+            function escapeHtml(unsafe) {
+                if (!unsafe) return '';
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
             }
             
-            // Load draft on page load
-            loadDraft();
+            // ========== KHỞI TẠO BAN ĐẦU ==========
             
-            // Save draft periodically while typing
-            let draftTimeout;
-            [nameInput, messageInput].forEach(input => {
-                input.addEventListener('input', function() {
-                    clearTimeout(draftTimeout);
-                    draftTimeout = setTimeout(saveDraft, 1000); // Save after 1 second of no typing
-                });
-            });
+            // Tạo một vài trái tim khi trang load
+            createHearts(3);
             
-            // Clear draft after successful submission
-            const originalSaveWish = wishesManager.saveWish;
-            wishesManager.saveWish = async function(wishData) {
-                const result = await originalSaveWish.call(this, wishData);
-                clearDraft();
-                return result;
-            };
-            
-            // Notification permission (for future features)
-            if ('Notification' in window && Notification.permission === 'default') {
-                setTimeout(() => {
-                    Notification.requestPermission().then(permission => {
-                        console.log('Notification permission:', permission);
-                    });
-                }, 5000); // Ask after 5 seconds
+            // Kiểm tra xem trình duyệt có hỗ trợ Web Share API không
+            if (!navigator.share) {
+                shareModalBtn.innerHTML = '<i class="fas fa-copy"></i> Sao chép link';
             }
-            
-            // Touch gestures for mobile
-            let touchStartY = 0;
-            let touchEndY = 0;
-            
-            document.addEventListener('touchstart', function(e) {
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-            
-            document.addEventListener('touchend', function(e) {
-                touchEndY = e.changedTouches[0].clientY;
-                handleSwipe();
-            }, { passive: true });
-            
-            function handleSwipe() {
-                const swipeThreshold = 50;
-                const diff = touchStartY - touchEndY;
-                
-                // Swipe up to refresh
-                if (diff > swipeThreshold && window.scrollY === 0) {
-                    refreshBtn.click();
-                }
-            }
-            
-            // Performance monitoring
-            if ('performance' in window) {
-                window.addEventListener('load', function() {
-                    setTimeout(() => {
-                        const perfData = performance.getEntriesByType('navigation')[0];
-                        console.log('Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
-                    }, 0);
-                });
-            }
-            
-            // Error handling for unhandled errors
-            window.addEventListener('error', function(e) {
-                console.error('Global error:', e.error);
-                // Could send to analytics service in production
-            });
-            
-            window.addEventListener('unhandledrejection', function(e) {
-                console.error('Unhandled promise rejection:', e.reason);
-                // Could send to analytics service in production
-            });
-            
-            console.log('LOVE 12A1 initialized successfully! 💖');
         });
-          // ========== XỬ LÝ MODAL ==========
-    window.showAbout = function() {
-        document.getElementById('aboutModal').classList.add('active');
-    };
-    
-    window.hideAbout = function() {
-        document.getElementById('aboutModal').classList.remove('active');
-    };
-    
-    window.showContact = function() {
-        document.getElementById('contactModal').classList.add('active');
-    };
-    
-    window.hideContact = function() {
-        document.getElementById('contactModal').classList.remove('active');
-    };
-    
-    // ========== XỬ LÝ NÚT VỀ ĐẦU TRANG ==========
-    const backToTopBtn = document.getElementById('backToTop');
-    
-    // Hiển thị/nấu nút khi cuộn
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            backToTopBtn.classList.add('visible');
-        } else {
-            backToTopBtn.classList.remove('visible');
-        }
-    });
-    
-    // Xử lý click nút về đầu trang
-    backToTopBtn.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-    
-    // Cải thiện hàm scrollToTop
-    window.scrollToTop = function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
-    
-    // Đóng modal khi click ra ngoài
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('info-modal')) {
-            document.querySelectorAll('.info-modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-    });
-    
-    // Đóng modal bằng phím ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.info-modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-    });
     </script>
 </body>
 </html>
