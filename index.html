@@ -731,68 +731,6 @@
     </div>
 
     <script>
-        // ========== XỬ LÝ MODAL ==========
-    window.showAbout = function() {
-        document.getElementById('aboutModal').classList.add('active');
-    };
-    
-    window.hideAbout = function() {
-        document.getElementById('aboutModal').classList.remove('active');
-    };
-    
-    window.showContact = function() {
-        document.getElementById('contactModal').classList.add('active');
-    };
-    
-    window.hideContact = function() {
-        document.getElementById('contactModal').classList.remove('active');
-    };
-    
-    // ========== XỬ LÝ NÚT VỀ ĐẦU TRANG ==========
-    const backToTopBtn = document.getElementById('backToTop');
-    
-    // Hiển thị/nấu nút khi cuộn
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            backToTopBtn.classList.add('visible');
-        } else {
-            backToTopBtn.classList.remove('visible');
-        }
-    });
-    
-    // Xử lý click nút về đầu trang
-    backToTopBtn.addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-    
-    // Cải thiện hàm scrollToTop
-    window.scrollToTop = function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
-    
-    // Đóng modal khi click ra ngoài
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('info-modal')) {
-            document.querySelectorAll('.info-modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-    });
-    
-    // Đóng modal bằng phím ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            document.querySelectorAll('.info-modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-    });
         // ========== CẤU HÌNH ==========
         const CONFIG = {
             MAX_WISHES: 50,
@@ -1400,6 +1338,68 @@
             
             console.log('LOVE 12A1 initialized successfully! 💖');
         });
+          // ========== XỬ LÝ MODAL ==========
+    window.showAbout = function() {
+        document.getElementById('aboutModal').classList.add('active');
+    };
+    
+    window.hideAbout = function() {
+        document.getElementById('aboutModal').classList.remove('active');
+    };
+    
+    window.showContact = function() {
+        document.getElementById('contactModal').classList.add('active');
+    };
+    
+    window.hideContact = function() {
+        document.getElementById('contactModal').classList.remove('active');
+    };
+    
+    // ========== XỬ LÝ NÚT VỀ ĐẦU TRANG ==========
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    // Hiển thị/nấu nút khi cuộn
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    
+    // Xử lý click nút về đầu trang
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Cải thiện hàm scrollToTop
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+    
+    // Đóng modal khi click ra ngoài
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('info-modal')) {
+            document.querySelectorAll('.info-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+    });
+    
+    // Đóng modal bằng phím ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.info-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+    });
     </script>
 </body>
 </html>
