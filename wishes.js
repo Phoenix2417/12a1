@@ -43,5 +43,5 @@ app.get('/wishes.txt', (req, res) => {
 // Khởi động server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running at https://12a1.x10.bz or http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
