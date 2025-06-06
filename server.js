@@ -1,21 +1,12 @@
-const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const bodyParser = require('body-parser');
-const cors = require('cors');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
 const WISHES_FILE = path.join(__dirname, 'data', 'wishes.json');
 
 // Đảm bảo thư mục data tồn tại
 if (!fs.existsSync(path.join(__dirname, 'data'))) {
     fs.mkdirSync(path.join(__dirname, 'data'));
 }
-
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
 
 // Đọc dữ liệu từ file JSON
 function readWishes() {
@@ -82,69 +73,59 @@ function validateWish(wish) {
     return errors.length === 0 ? null : errors;
 }
 
-// API endpoints
-app.get('/api/wishes', (req, res) => {
+// Hàm thêm lời chúc mới
+function addNewWish(wishData) {
+    const validationErrors = validateWish(wishData);
+    if (validationErrors) {
+        console.error('Lỗi validate:', validationErrors);
+        return { success: false, errors: validationErrors };
+    }
+
+    const wishes = readWishes();
+    const newWish = {
+        id: Date.now().toString(),
+        name: wishData.name.trim(),
+        message: wishData.message.trim(),
+        type: wishData.type,
+        timestamp: Date.now()
+    };
+    
+    // Thêm vào đầu mảng
+    wishes.unshift(newWish);
+    
+    // Giới hạn số lượng lưu trữ (tối đa 50)
+    const limitedWishes = wishes.slice(0, 50);
+    
+    if (writeWishes(limitedWishes)) {
+        return { success: true, wish: newWish };
+    } else {
+        return { success: false, error: 'Không thể lưu lời chúc' };
+    }
+}
+
+// Hàm lấy danh sách lời chúc
+function getWishes() {
     try {
         const wishes = readWishes();
         // Sắp xếp theo thời gian mới nhất
         const sortedWishes = wishes.sort((a, b) => b.timestamp - a.timestamp);
         // Giới hạn số lượng trả về (tối đa 50)
-        const limitedWishes = sortedWishes.slice(0, 50);
-        res.json(limitedWishes);
+        return sortedWishes.slice(0, 50);
     } catch (error) {
-        console.error('Lỗi khi xử lý yêu cầu:', error);
-        res.status(500).json({ error: 'Đã xảy ra lỗi khi tải lời chúc' });
+        console.error('Lỗi khi đọc lời chúc:', error);
+        return [];
     }
-});
+}
 
-app.post('/api/wishes', (req, res) => {
-    try {
-        const validationErrors = validateWish(req.body);
-        if (validationErrors) {
-            return res.status(400).json({ errors: validationErrors });
-        }
+// Xuất các hàm để có thể sử dụng từ file khác
+module.exports = {
+    addNewWish,
+    getWishes,
+    validateWish
+};
 
-        const wishes = readWishes();
-        const newWish = {
-            id: Date.now().toString(),
-            name: req.body.name.trim(),
-            message: req.body.message.trim(),
-            type: req.body.type,
-            timestamp: Date.now()
-        };
-        
-        // Thêm vào đầu mảng
-        wishes.unshift(newWish);
-        
-        // Giới hạn số lượng lưu trữ (tối đa 50)
-        const limitedWishes = wishes.slice(0, 50);
-        
-        if (writeWishes(limitedWishes)) {
-            res.status(201).json(newWish);
-        } else {
-            res.status(500).json({ error: 'Không thể lưu lời chúc' });
-        }
-    } catch (error) {
-        console.error('Lỗi khi xử lý yêu cầu:', error);
-        res.status(500).json({ error: 'Đã xảy ra lỗi khi lưu lời chúc' });
-    }
-});
-
-// Xử lý 404
-app.use((req, res) => {
-    res.status(404).send('Không tìm thấy trang');
-});
-
-// Xử lý lỗi
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Đã xảy ra lỗi!');
-});
-
-// Khởi động server
-app.listen(PORT, () => {
-    console.log(`Server API đang chạy tại http://localhost:${PORT}`);
-    console.log(`Bạn có thể truy cập các endpoint:`);
-    console.log(`- GET /api/wishes - Lấy danh sách lời chúc`);
-    console.log(`- POST /api/wishes - Gửi lời chúc mới`);
-});
+console.log('Module quản lý lời chúc đã sẵn sàng');
+console.log('Bạn có thể sử dụng các hàm sau:');
+console.log('- getWishes(): Lấy danh sách lời chúc');
+console.log('- addNewWish(wishData): Thêm lời chúc mới');
+console.log('- validateWish(wishData): Kiểm tra tính hợp lệ của lời chúc');
