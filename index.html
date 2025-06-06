@@ -925,7 +925,8 @@
             // Tải và hiển thị lời chúc từ wishes.txt
             async function loadAndDisplayWishes() {
                 try {
-                    const res = await fetch('/wishes.txt');
+                    // Thêm tham số ngẫu nhiên để tránh cache
+                    const res = await fetch('/wishes.txt?nocache=' + Date.now());
                     if (!res.ok) throw new Error('Không thể tải lời chúc');
                     const text = await res.text();
                     const wishes = text
