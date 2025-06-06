@@ -1,3 +1,3 @@
 npm install
-node server.js
+node wishesManager.js
 npm start
