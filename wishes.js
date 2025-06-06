@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 const app = express();
 
 const DATA_DIR = path.join(__dirname, 'data');
@@ -8,6 +9,7 @@ const WISHES_FILE = path.join(DATA_DIR, 'wishes.txt');
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname)); // phục vụ file tĩnh
 
@@ -23,14 +25,18 @@ app.post('/save-wish', (req, res) => {
         message: message.trim(),
         timestamp: Date.now()
     };
-    fs.appendFileSync(WISHES_FILE, JSON.stringify(wish) + '\n', 'utf8');
-    res.json({ success: true });
+    try {
+        fs.appendFileSync(WISHES_FILE, JSON.stringify(wish) + '\n', 'utf8');
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ error: 'Không thể lưu lời chúc' });
+    }
 });
 
 // API lấy danh sách lời chúc (file txt)
 app.get('/wishes.txt', (req, res) => {
-    if (!fs.existsSync(WISHES_FILE)) return res.send('');
-    res.sendFile(WISHES_FILE);
+    if (!fs.existsSync(WISHES_FILE)) return res.type('text/plain').send('');
+    res.type('text/plain').sendFile(WISHES_FILE);
 });
 
 // Khởi động server
