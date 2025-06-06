@@ -1,53 +1,40 @@
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const app = express();
 
 const DATA_DIR = path.join(__dirname, 'data');
-const WISHES_FILE = path.join(DATA_DIR, 'wishes.json');
+const WISHES_FILE = path.join(DATA_DIR, 'wishes.txt');
 
-// Đảm bảo thư mục data tồn tại
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
 
-// Đọc danh sách lời chúc từ file
-function getWishes() {
-    if (!fs.existsSync(WISHES_FILE)) return [];
-    try {
-        const raw = fs.readFileSync(WISHES_FILE, 'utf8');
-        return JSON.parse(raw || '[]');
-    } catch {
-        return [];
+app.use(express.json());
+app.use(express.static(__dirname)); // phục vụ file tĩnh
+
+// API lưu lời chúc
+app.post('/save-wish', (req, res) => {
+    const { name, type, message } = req.body;
+    if (!name || name.trim().length < 2 || !message || message.trim().length < 5) {
+        return res.status(400).json({ error: 'Dữ liệu không hợp lệ' });
     }
-}
-
-// Thêm lời chúc mới vào file
-function addNewWish(wish) {
-    const errors = [];
-    if (!wish.name || wish.name.trim().length < 2) errors.push('Tên phải có ít nhất 2 ký tự.');
-    if (!wish.message || wish.message.trim().length < 5) errors.push('Lời chúc phải có ít nhất 5 ký tự.');
-    if (errors.length > 0) return { success: false, errors };
-
-    const wishes = getWishes();
-    const newWish = {
-        ...wish,
+    const wish = {
+        name: name.trim(),
+        type: type || 'general',
+        message: message.trim(),
         timestamp: Date.now()
     };
-    wishes.unshift(newWish);
-    fs.writeFileSync(WISHES_FILE, JSON.stringify(wishes, null, 2), 'utf8');
-    return { success: true, wish: newWish };
-}
-
-// Thêm lời chúc mới
-const result = addNewWish({
-    name: "Tên người gửi",
-    message: "Nội dung lời chúc",
-    type: "general"
+    fs.appendFileSync(WISHES_FILE, JSON.stringify(wish) + '\n', 'utf8');
+    res.json({ success: true });
 });
 
-if (result.success) {
-    console.log("Thêm lời chúc thành công!");
-} else {
-    console.log("Lỗi:", result.errors || result.error);
-}
+// API lấy danh sách lời chúc (file txt)
+app.get('/wishes.txt', (req, res) => {
+    if (!fs.existsSync(WISHES_FILE)) return res.send('');
+    res.sendFile(WISHES_FILE);
+});
 
-// Lấy danh sách lời chúc
-const allWishes = getWishes();
-console.log("Danh sách lời chúc:", allWishes);
+// Khởi động server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
