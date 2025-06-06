@@ -28,7 +28,7 @@ function initWishesData() {
 // Tải dữ liệu từ web về file data.txt (hoặc tên file truyền vào)
 async function fetchNoteToFile(filename = 'data.txt') {
   const path = `${__dirname}/${filename}`;
-  const url = 'https://12a1.x10.bz/data.txt';
+  const url = 'http://localhost:3000/data.txt'; // Đường dẫn localhost
   try {
     const res = await axios.get(url, { responseType: 'text' });
     fs.writeFileSync(path, res.data, 'utf8');
