@@ -749,13 +749,8 @@
 
     <!-- Đăng nhập tên người dùng -->
     <script src="login.js"></script>
-    <script src="wishesManager.js"></script>
     <script>
-        // ========== KHỞI TẠO ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // Khởi tạo manager
-            const wishesManager = new WishesManager();
-
             // DOM Elements
             const heartsContainer = document.getElementById('hearts-container');
             const musicToggle = document.getElementById('music-toggle');
@@ -859,32 +854,38 @@
                 const name = document.getElementById('name').value;
                 const type = document.getElementById('type').value;
                 const message = document.getElementById('message').value;
-                
-                const wishData = { name, type, message };
-                const errors = wishesManager.validateWish(wishData);
-                
+
+                // Validate
+                const errors = [];
+                if (!name || name.trim().length < 2) errors.push('Tên phải có ít nhất 2 ký tự.');
+                if (!message || message.trim().length < 5) errors.push('Lời chúc phải có ít nhất 5 ký tự.');
                 if (errors.length > 0) {
                     alert('Lỗi:\n' + errors.join('\n'));
                     return;
                 }
-                
+
                 // Hiển thị loading
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<span class="loading"></span> Đang gửi...';
-                
+
                 try {
-                    const newWish = await wishesManager.saveWish(wishData);
-                    
+                    // Gửi lời chúc lên server để lưu vào wishes.txt
+                    await fetch('/save-wish', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, type, message })
+                    });
+
                     // Hiển thị modal xác nhận
                     confirmationModal.classList.add('active');
-                    
+
                     // Reset form
-                    document.getElementById('name').value = '';
+                    document.getElementById('name').value = localStorage.getItem('12a1_username') || '';
                     document.getElementById('message').value = '';
-                    
+
                     // Tải lại danh sách
                     await loadAndDisplayWishes();
-                    
+
                     // Hiệu ứng trái tim
                     createHearts(10);
                 } catch (error) {
@@ -921,15 +922,20 @@
                 confirmationModal.classList.remove('active');
             });
 
-            // ========== CÁC HÀM TIỆN ÍCH ==========
-            
-            // Tải và hiển thị lời chúc
+            // Tải và hiển thị lời chúc từ wishes.txt
             async function loadAndDisplayWishes() {
                 try {
-                    const wishes = await wishesManager.loadWishes();
+                    const res = await fetch('/wishes.txt');
+                    if (!res.ok) throw new Error('Không thể tải lời chúc');
+                    const text = await res.text();
+                    const wishes = text
+                        .split('\n')
+                        .filter(line => line.trim())
+                        .map(line => {
+                            try { return JSON.parse(line); } catch { return null; }
+                        })
+                        .filter(Boolean);
                     displayWishes(wishes);
-                    
-                    // Cập nhật số lượng lời chúc
                     totalWishesElement.textContent = wishes.length;
                 } catch (error) {
                     console.error('Lỗi khi tải lời chúc:', error);
