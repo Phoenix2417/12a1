@@ -7,7 +7,9 @@ const app = express();
 const DATA_DIR = path.join(__dirname, 'data');
 const WISHES_FILE = path.join(DATA_DIR, 'wishes.txt');
 
+// Đảm bảo thư mục và file tồn tại
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
+if (!fs.existsSync(WISHES_FILE)) fs.writeFileSync(WISHES_FILE, '', 'utf8');
 
 app.use(cors());
 app.use(express.json());
@@ -35,12 +37,11 @@ app.post('/save-wish', (req, res) => {
 
 // API lấy danh sách lời chúc (file txt)
 app.get('/wishes.txt', (req, res) => {
-    if (!fs.existsSync(WISHES_FILE)) return res.type('text/plain').send('');
     res.type('text/plain').sendFile(WISHES_FILE);
 });
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running at https://12a1.x10.bz or http://localhost:${PORT}`);
 });
