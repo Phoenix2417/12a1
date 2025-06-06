@@ -754,8 +754,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Khởi tạo manager
             const wishesManager = new WishesManager();
-            let currentBg = 0;
-            
+
             // DOM Elements
             const heartsContainer = document.getElementById('hearts-container');
             const musicToggle = document.getElementById('music-toggle');
@@ -769,38 +768,24 @@
             const wishesListElement = document.getElementById('wishes-list');
             const totalWishesElement = document.getElementById('total-wishes');
             const backToTopBtn = document.getElementById('backToTop');
-            
-            // Tự động phát nhạc khi trang tải (nếu được phép)
-            const backgroundMusic = document.getElementById('background-music');
-            // Một số trình duyệt chỉ cho phép phát nhạc sau khi có thao tác người dùng,
-            // nên thử phát nhạc ngay khi DOMContentLoaded và khi người dùng tương tác lần đầu
-            function tryPlayMusic() {
-                if (backgroundMusic.paused) {
-                    backgroundMusic.volume = 0.5;
-                    backgroundMusic.play().catch(() => {});
-                }
-            }
-            tryPlayMusic();
-            document.body.addEventListener('click', tryPlayMusic, { once: true });
-            document.body.addEventListener('touchstart', tryPlayMusic, { once: true });
-            
+
             // ========== XỬ LÝ MODAL ==========
             window.showAbout = function() {
                 document.getElementById('aboutModal').classList.add('active');
             };
-            
+
             window.hideAbout = function() {
                 document.getElementById('aboutModal').classList.remove('active');
             };
-            
+
             window.showContact = function() {
                 document.getElementById('contactModal').classList.add('active');
             };
-            
+
             window.hideContact = function() {
                 document.getElementById('contactModal').classList.remove('active');
             };
-            
+
             // Đóng modal khi click ra ngoài
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('info-modal')) {
@@ -809,7 +794,7 @@
                     });
                 }
             });
-            
+
             // ========== XỬ LÝ NÚT VỀ ĐẦU TRANG ==========
             // Hiển thị/nấu nút khi cuộn
             window.addEventListener('scroll', function() {
@@ -819,7 +804,7 @@
                     backToTopBtn.classList.remove('visible');
                 }
             });
-            
+
             // Xử lý click nút về đầu trang
             backToTopBtn.addEventListener('click', function() {
                 window.scrollTo({
@@ -827,7 +812,7 @@
                     behavior: 'smooth'
                 });
             });
-            
+
             // Cải thiện hàm scrollToTop
             window.scrollToTop = function() {
                 window.scrollTo({
@@ -835,29 +820,19 @@
                     behavior: 'smooth'
                 });
             };
-            
+
             // ========== XỬ LÝ SỰ KIỆN ==========
-            
-            // Tải và hiển thị lời chúc ban đầu
-            loadAndDisplayWishes();
-            
-            // Thiết lập làm mới tự động
-            setInterval(loadAndDisplayWishes, CONFIG.REFRESH_INTERVAL);
-            
-            // Bật/tắt nhạc nền
-            musicToggle.addEventListener('click', function() {
+            // Tự động phát nhạc khi trang tải (nếu được phép)
+            function tryPlayMusic() {
                 if (backgroundMusic.paused) {
-                    backgroundMusic.volume = CONFIG.BACKGROUND_MUSIC_VOLUME;
-                    backgroundMusic.play();
-                    musicToggle.innerHTML = '<i class="fas fa-music"></i>';
-                    musicToggle.title = 'Tắt nhạc';
-                } else {
-                    backgroundMusic.pause();
-                    musicToggle.innerHTML = '<i class="fas fa-music-slash"></i>';
-                    musicToggle.title = 'Bật nhạc';
+                    backgroundMusic.volume = 0.5;
+                    backgroundMusic.play().catch(() => {});
                 }
-            });
-            
+            }
+            tryPlayMusic();
+            document.body.addEventListener('click', tryPlayMusic, { once: true });
+            document.body.addEventListener('touchstart', tryPlayMusic, { once: true });
+
             // Thay đổi hình nền
             const bgGradients = [
                 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
