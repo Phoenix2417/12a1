@@ -846,7 +846,7 @@
             // Làm mới lời chúc
             refreshBtn.addEventListener('click', function() {
                 loadAndDisplayWishes();
-                createHearts(5); // Hiệu ứng trái tim khi làm mới
+                createHearts(5);
             });
             
             // Gửi lời chúc
@@ -888,6 +888,11 @@
 
                     // Hiệu ứng trái tim
                     createHearts(10);
+
+                    // Chuyển hướng sang trang web xem lời chúc
+                    setTimeout(function() {
+                        window.location.href = 'http://localhost:3000';
+                    }, 1200); // Đợi 1.2s để người dùng thấy modal xác nhận
                 } catch (error) {
                     console.error('Lỗi khi gửi lời chúc:', error);
                     alert('Có lỗi xảy ra khi gửi lời chúc. Vui lòng thử lại!');
@@ -1074,6 +1079,9 @@
             if (!navigator.share) {
                 shareModalBtn.innerHTML = '<i class="fas fa-copy"></i> Sao chép link';
             }
+
+            // Tải lời chúc khi trang vừa load
+            loadAndDisplayWishes();
         });
     </script>
 </body>
