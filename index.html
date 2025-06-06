@@ -703,7 +703,7 @@
     </div>
 
     <!-- MODALS -->
-    <audio id="background-music" loop>
+    <audio id="background-music" loop autoplay muted>
         <source src="assets/background-music.mp3" type="audio/mpeg">
     </audio>
 
@@ -833,6 +833,7 @@
             // Bật/tắt nhạc nền
             musicToggle.addEventListener('click', function() {
                 if (backgroundMusic.paused) {
+                    backgroundMusic.muted = false; // Bỏ mute khi người dùng bật nhạc
                     backgroundMusic.volume = CONFIG.BACKGROUND_MUSIC_VOLUME;
                     backgroundMusic.play();
                     musicToggle.innerHTML = '<i class="fas fa-music"></i>';
