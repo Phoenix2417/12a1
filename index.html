@@ -703,7 +703,7 @@
     </div>
 
     <!-- MODALS -->
-    <audio id="background-music" loop autoplay muted>
+    <audio id="background-music" loop autoplay>
         <source src="assets/background-music.mp3" type="audio/mpeg">
     </audio>
 
@@ -770,6 +770,20 @@
             const totalWishesElement = document.getElementById('total-wishes');
             const backToTopBtn = document.getElementById('backToTop');
             
+            // Tự động phát nhạc khi trang tải (nếu được phép)
+            const backgroundMusic = document.getElementById('background-music');
+            // Một số trình duyệt chỉ cho phép phát nhạc sau khi có thao tác người dùng,
+            // nên thử phát nhạc ngay khi DOMContentLoaded và khi người dùng tương tác lần đầu
+            function tryPlayMusic() {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.volume = 0.5;
+                    backgroundMusic.play().catch(() => {});
+                }
+            }
+            tryPlayMusic();
+            document.body.addEventListener('click', tryPlayMusic, { once: true });
+            document.body.addEventListener('touchstart', tryPlayMusic, { once: true });
+            
             // ========== XỬ LÝ MODAL ==========
             window.showAbout = function() {
                 document.getElementById('aboutModal').classList.add('active');
@@ -833,7 +847,6 @@
             // Bật/tắt nhạc nền
             musicToggle.addEventListener('click', function() {
                 if (backgroundMusic.paused) {
-                    backgroundMusic.muted = false; // Bỏ mute khi người dùng bật nhạc
                     backgroundMusic.volume = CONFIG.BACKGROUND_MUSIC_VOLUME;
                     backgroundMusic.play();
                     musicToggle.innerHTML = '<i class="fas fa-music"></i>';
