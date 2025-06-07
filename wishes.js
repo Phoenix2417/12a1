@@ -83,6 +83,12 @@ app.get('/wishes.txt', (req, res) => {
     res.type('text/plain').sendFile(WISHES_FILE);
 });
 
+// Đảm bảo API trả về JSON cho mọi lỗi và mọi phương thức
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Lỗi server nội bộ", details: err.toString() });
+});
+
 // Đảm bảo fallback cho route không tồn tại (tránh lỗi CORS preflight hoặc fetch)
 app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
