@@ -14,7 +14,12 @@ const WISHES_FILE = path.join(DATA_DIR, 'wishes.txt');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
 if (!fs.existsSync(WISHES_FILE)) fs.writeFileSync(WISHES_FILE, '', 'utf8');
 
-app.use(cors());
+// Sửa lỗi "Failed to fetch" bằng cách đảm bảo các headers và CORS đúng
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname)); // phục vụ file tĩnh
 
@@ -23,15 +28,18 @@ let messages = []; // nếu bạn chưa dùng database, tạm lưu trong RAM
 // API lưu lời chúc vào RAM và file
 app.post("/api/messages", (req, res) => {
   const { name, type, message } = req.body;
-  if (!name || !message) return res.status(400).json({ error: "Thiếu dữ liệu!" });
-
+  if (!name || !message) {
+    res.status(400).json({ error: "Thiếu dữ liệu!" });
+    return;
+  }
   const newMessage = { id: Date.now(), name, type, message, timestamp: Date.now() };
   messages.push(newMessage);
-
-  // Lưu vào wishes.txt
-  fs.appendFileSync(WISHES_FILE, JSON.stringify(newMessage) + '\n', 'utf8');
-
-  res.status(201).json(newMessage);
+  try {
+    fs.appendFileSync(WISHES_FILE, JSON.stringify(newMessage) + '\n', 'utf8');
+    res.status(201).json(newMessage);
+  } catch (err) {
+    res.status(500).json({ error: "Lỗi ghi dữ liệu", details: err.toString() });
+  }
 });
 
 // API lấy danh sách lời chúc từ RAM (ưu tiên RAM, nếu rỗng thì lấy từ file)
@@ -73,6 +81,11 @@ app.post('/save-wish', (req, res) => {
 
 app.get('/wishes.txt', (req, res) => {
     res.type('text/plain').sendFile(WISHES_FILE);
+});
+
+// Đảm bảo fallback cho route không tồn tại (tránh lỗi CORS preflight hoặc fetch)
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
 });
 
 // Khởi động server
