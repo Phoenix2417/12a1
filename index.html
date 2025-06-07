@@ -764,6 +764,7 @@
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
 
+      // Gửi lời chúc lên Node.js backend
       function sendMessage() {
         const name = document.querySelector('#nameInput').value.trim();
         const type = document.querySelector('#typeSelect').value;
@@ -774,48 +775,47 @@
           return;
         }
 
-        fetch("http://localhost:3000/api/messages", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: name,
-            type: type,
-            message: message
-          })
-        })
-        .then(res => {
-          if (!res.ok) throw new Error("Lỗi gửi lời chúc!");
-          return res.json();
-        })
-        .then(data => {
-          alert("Đã gửi lời chúc ❤️");
-          document.querySelector('#messageInput').value = "";
-          // Cập nhật lại danh sách lời chúc
-          loadMessagesFromAPI();
-        })
-        .catch(err => {
-          console.error("Lỗi gửi lời chúc:", err);
-          alert("Không gửi được lời chúc. Vui lòng thử lại!");
-        });
-      }
-
-      // Hiển thị lời chúc từ API backend Node.js (wishes.txt)
-      function loadMessagesFromAPI() {
-        fetch("http://localhost:3000/api/messages")
-          .then(res => res.json())
+        sendWish(name, type, message)
           .then(data => {
-            const container = document.getElementById("messages-list");
-            container.innerHTML = data.map(msg => `
-              <div class="message">
-                <strong>${msg.name}</strong> (${msg.type}) nói:
-                <p>${msg.message}</p>
-              </div>
-            `).join("");
+            if (data.error) throw new Error(data.error);
+            alert("Đã gửi lời chúc ❤️");
+            document.querySelector('#messageInput').value = "";
+            fetchWishes();
+          })
+          .catch(err => {
+            console.error("Lỗi gửi lời chúc:", err);
+            alert(err.message || "Không gửi được lời chúc. Vui lòng thử lại!");
           });
       }
 
+      // Gửi lời chúc
+      async function sendWish(name, type, message) {
+        const res = await fetch("http://localhost:3000/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, type, message })
+        });
+        return res.json();
+      }
+
+      // Lấy danh sách lời chúc
+      async function fetchWishes() {
+        const res = await fetch("http://localhost:3000/api/messages");
+        const data = await res.json();
+        // hiển thị data vào HTML tại đây...
+        const container = document.getElementById("messages-list");
+        if (container) {
+          container.innerHTML = data.map(msg => `
+            <div class="message">
+              <strong>${msg.name}</strong> (${msg.type}) nói:
+              <p>${msg.message}</p>
+            </div>
+          `).join("");
+        }
+      }
+
       // Gọi khi trang vừa load
-      loadMessagesFromAPI();
+      fetchWishes();
     </script>
 
     <!-- Đăng nhập tên người dùng -->
