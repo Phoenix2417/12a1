@@ -798,20 +798,47 @@
         return res.json();
       }
 
-      // Lấy danh sách lời chúc
+      // Lấy danh sách lời chúc và hiển thị lên trang
       async function fetchWishes() {
         const res = await fetch("http://localhost:3000/api/messages");
         const data = await res.json();
-        // hiển thị data vào HTML tại đây...
         const container = document.getElementById("messages-list");
         if (container) {
-          container.innerHTML = data.map(msg => `
-            <div class="message">
-              <strong>${msg.name}</strong> (${msg.type}) nói:
-              <p>${msg.message}</p>
-            </div>
-          `).join("");
+          if (!data.length) {
+            container.innerHTML = `<div class="empty-message">Chưa có lời chúc nào. Hãy là người đầu tiên nhé!</div>`;
+          } else {
+            container.innerHTML = data.map(msg => `
+              <div class="message">
+                <strong>${msg.name}</strong> (${msg.type}) nói:
+                <p>${msg.message}</p>
+              </div>
+            `).join("");
+          }
         }
+      }
+
+      // Gửi lời chúc và cập nhật danh sách
+      function sendMessage() {
+        const name = document.querySelector('#nameInput').value.trim();
+        const type = document.querySelector('#typeSelect').value;
+        const message = document.querySelector('#messageInput').value.trim();
+
+        if (!name || !message) {
+          alert("Điền đầy đủ thông tin nha!");
+          return;
+        }
+
+        sendWish(name, type, message)
+          .then(data => {
+            if (data.error) throw new Error(data.error);
+            alert("Đã gửi lời chúc ❤️");
+            document.querySelector('#messageInput').value = "";
+            fetchWishes();
+          })
+          .catch(err => {
+            console.error("Lỗi gửi lời chúc:", err);
+            alert(err.message || "Không gửi được lời chúc. Vui lòng thử lại!");
+          });
       }
 
       // Gọi khi trang vừa load
