@@ -1,60 +1,70 @@
+// Sử dụng Firebase Admin SDK để lấy/gửi lời chúc thay vì file hệ thống
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const fs = require("fs");
-const path = require("path");
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountKey.json");
 
 const app = express();
 const PORT = 3000;
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
-const WISHES_FILE = path.join(DATA_DIR, 'wishes.txt');
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://wishes-f897a-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
 
-// Đảm bảo thư mục và file tồn tại
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
-if (!fs.existsSync(WISHES_FILE)) fs.writeFileSync(WISHES_FILE, '', 'utf8');
+const db = admin.database();
 
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"]
+}));
 app.use(bodyParser.json());
 
-// Gửi lời chúc (lưu vào file)
-app.post("/api/messages", (req, res) => {
+// Gửi lời chúc (lưu vào Firebase)
+app.post("/api/messages", async (req, res) => {
   const { name, type, message } = req.body;
   if (!name || !message) return res.status(400).json({ error: "Thiếu dữ liệu!" });
 
   const newMessage = {
-    id: Date.now(),
-    name,
-    type,
-    message,
+    name: name.trim(),
+    type: type || 'general',
+    message: message.trim(),
     timestamp: Date.now()
   };
 
   try {
-    fs.appendFileSync(WISHES_FILE, JSON.stringify(newMessage) + '\n', 'utf8');
-    res.status(201).json(newMessage);
+    const ref = db.ref("messages").push();
+    await ref.set(newMessage);
+    res.status(201).json({ id: ref.key, ...newMessage });
   } catch (err) {
     res.status(500).json({ error: "Lỗi ghi dữ liệu", details: err.toString() });
   }
 });
 
-// Lấy tất cả lời chúc (từ file)
-app.get("/api/messages", (req, res) => {
+// Lấy tất cả lời chúc từ Firebase
+app.get("/api/messages", async (req, res) => {
   try {
-    const lines = fs.readFileSync(WISHES_FILE, 'utf8')
-      .split('\n')
-      .filter(line => line.trim())
-      .map(line => {
-        try { return JSON.parse(line); } catch { return null; }
-      })
-      .filter(Boolean)
+    const snapshot = await db.ref("messages").once("value");
+    const data = snapshot.val() || {};
+    const messages = Object.entries(data).map(([id, val]) => ({ id, ...val }))
       .sort((a, b) => b.timestamp - a.timestamp);
-    res.json(lines);
+    res.json(messages);
   } catch (err) {
     res.status(500).json({ error: "Lỗi đọc dữ liệu", details: err.toString() });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server chạy tại http://localhost:${PORT}`);
+// Xử lý lỗi server nội bộ
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Lỗi server nội bộ", details: err.toString() });
 });
+
+// Xử lý route không tồn tại
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+app.listen(PORT, () => console.log(`Server chạy tại http://localhost:${PORT}`));
