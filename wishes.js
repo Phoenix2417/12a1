@@ -15,7 +15,10 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(WISHES_FILE)) fs.writeFileSync(WISHES_FILE, '', 'utf8');
 
 // Cấu hình CORS và body parser
-app.use(cors());
+app.use(cors({
+  origin: "*", // cho phép tất cả các domain
+  methods: ["GET", "POST"]
+}));
 app.use(bodyParser.json());
 
 // API lưu lời chúc vào file
