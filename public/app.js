@@ -118,11 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 try {
                     // Gửi lời chúc lên server để lưu vào wishes.txt
-                    await fetch('/save-wish', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, type, message })
-                    });
+                    await sendWish(name, type, message);
 
                     // Hiển thị modal xác nhận
                     confirmationModal.classList.add('active');
@@ -331,3 +327,46 @@ document.addEventListener('DOMContentLoaded', function() {
             // Tải lời chúc khi trang vừa load
             loadAndDisplayWishes();
         });
+
+        async function sendWish(name, type, message) {
+          try {
+            const response = await fetch("http://localhost:3000/api/messages", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              },
+              body: JSON.stringify({ name, type, message })
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to send wish');
+            }
+
+            return await response.json();
+          } catch (err) {
+            console.error("Error sending wish:", err);
+            throw err;
+          }
+        }
+
+        async function fetchWishes() {
+          try {
+            const response = await fetch("http://localhost:3000/api/messages");
+            if (!response.ok) {
+              throw new Error('Failed to fetch wishes');
+            }
+            return await response.json();
+          } catch (err) {
+            console.error("Error fetching wishes:", err);
+            document.getElementById("messages-list").innerHTML = `
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Không thể tải lời chúc. Vui lòng thử lại sau!</p>
+                <button onclick="fetchWishes()">Thử lại</button>
+              </div>
+            `;
+            throw err;
+          }
+        }
