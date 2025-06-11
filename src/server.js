@@ -15,31 +15,55 @@ admin.initializeApp({
 
 const db = admin.database();
 
+// CORS config
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
 // Middleware
-app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Routes
+// Basic error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: err.message
+  });
+});
+
+// Add health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+// Routes with error handling
 app.post("/api/messages", async (req, res) => {
-  const { name, type, message } = req.body;
-  if (!name || !message) {
-    return res.status(400).json({ error: "Thiếu dữ liệu!" });
-  }
-
-  const newMessage = {
-    name: name.trim(),
-    type: type || "general",
-    message: message.trim(),
-    timestamp: Date.now()
-  };
-
   try {
+    const { name, type, message } = req.body;
+    if (!name || !message) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const newMessage = {
+      name: name.trim(),
+      type: type || "general",
+      message: message.trim(),
+      timestamp: Date.now()
+    };
+
     const ref = db.ref("messages").push();
     await ref.set(newMessage);
     res.status(201).json({ id: ref.key, ...newMessage });
   } catch (err) {
-    res.status(500).json({ error: "Lỗi ghi dữ liệu", details: err.toString() });
+    console.error('Error saving message:', err);
+    res.status(500).json({
+      error: "Failed to save message",
+      details: err.message
+    });
   }
 });
 
@@ -56,10 +80,6 @@ app.get("/api/messages", async (req, res) => {
   }
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Lỗi server nội bộ", details: err.toString() });
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
-
-app.listen(PORT, () => console.log(`Server đang chạy tại http://localhost:${PORT}`));
